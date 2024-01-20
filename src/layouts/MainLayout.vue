@@ -17,9 +17,18 @@
         <q-item-label header>
           Your accounts:
         </q-item-label>
-        <q-item clickable>asdasd</q-item>
-        <q-item clickable>asdasd</q-item>
-        <q-item clickable>asdasd</q-item>
+        <q-item clickable v-for="account in userStore.accounts" :key="account.id">
+          <q-item-section avatar>
+            <q-avatar rounded>
+              <img :src="API_URL + '/' + account.avatar" />
+            </q-avatar>
+          </q-item-section>
+          <q-item-section>
+
+            {{ account.name }}
+          </q-item-section>
+        </q-item>
+
 
 
       </q-list>
@@ -34,6 +43,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useUser } from '../stores/user'
+import { API_URL } from '../api'
 
 const userStore = useUser()
 const leftDrawerOpen = ref(false)
