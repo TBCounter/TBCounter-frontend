@@ -9,6 +9,7 @@ export const useUser = defineStore('user', () => {
   const router = useRouter();
   const jwt = useJWT();
 
+  const filledInfo = ref(false)
   const accounts = ref<Account[]>();
 
   async function logout() {
@@ -18,7 +19,8 @@ export const useUser = defineStore('user', () => {
   async function fillUserInfo() {
     await getAccounts().then((response) => {
       accounts.value = response.data;
+      filledInfo.value = true;
     });
   }
-  return { logout, fillUserInfo, accounts };
+  return { logout, fillUserInfo, accounts, filledInfo };
 });

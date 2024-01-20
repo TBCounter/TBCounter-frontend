@@ -28,6 +28,17 @@
             {{ account.name }}
           </q-item-section>
         </q-item>
+        <div v-if="!userStore.filledInfo">
+          <q-item v-for="n in 10" :key="n">
+            <q-item-section avatar>
+
+              <q-skeleton height="40px" width="40px" type="rect"></q-skeleton>
+            </q-item-section>
+            <q-item-section>
+              <q-skeleton full-width type="text"></q-skeleton>
+            </q-item-section>
+          </q-item>
+        </div>
 
 
 
