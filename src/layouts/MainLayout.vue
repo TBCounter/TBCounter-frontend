@@ -88,7 +88,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useUser } from '../stores/user'
 import { API_URL } from '../api'
 
@@ -101,4 +101,14 @@ const leftDrawerOpen = ref(false)
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value
 }
+
+watch(() => userStore.filledInfo, (value) => {
+  if (value && !userStore.accounts?.length) {
+    help.value = true
+  }
+}, {
+  immediate: true
+})
+
+
 </script>
