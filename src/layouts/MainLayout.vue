@@ -86,7 +86,7 @@
             </q-card-section>
           </q-card>
         </q-dialog>
-
+     
 
         <q-btn class="q-ml-md"
           color="white"
@@ -96,28 +96,33 @@
           label="Change Log"
         />
         <q-dialog v-model="changeLog">
-          <q-card>
-            <q-card-section class="row items-center q-pb-none">
-              <div class="text-h6">Change Log</div>
-              <q-space />
-              <q-btn icon="close" flat round dense v-close-popup />
-            </q-card-section>
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Change Log</div>
+        </q-card-section>
 
-            <q-card-section>
-              <div class="q-ma-md">
-                <q-scroll-area style="height: 200px; width: 500px">
-                  <div v-for="log in changeLogs" :key="log" class="q-py-xs">
-                    {{ log.Date }}
-                    <q-item-label v-for="text in log.Text" :key="text" caption>
-                      {{ text }}
-                    </q-item-label>
-                  </div>
-                </q-scroll-area>
-              </div>
-            </q-card-section>
-          </q-card>
-        </q-dialog>
-      </div>
+        <q-separator />
+
+        <q-card-section style="max-height: 50vh" class="scroll">
+          <q-item v-for="log in changeLogs" :key="log">
+            <q-item-section>
+              <q-item-label>{{ log.Date }}</q-item-label>
+              <q-item-label v-for="text in log.Text" :key="text" caption>
+                {{ text }}
+              </q-item-label>
+            </q-item-section>
+            </q-item>
+          
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-actions align="right">
+          <q-btn flat label="Ok" color="primary" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+  </div>
     </q-drawer>
 
     <q-page-container>
