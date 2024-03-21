@@ -1,4 +1,3 @@
-
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
@@ -105,16 +104,15 @@
 
             <q-card-section>
               <div class="q-ma-md">
-    <q-scroll-area style="height: 200px; width: 500px;">
-      <div v-for="log in changeLogs" :key="log" class="q-py-xs">
-        {{ log.Date }}
-        <q-item-label v-for="text in log.Text" :key="text" caption>
-              {{ text }}
-            </q-item-label>
-        
-      </div>
-    </q-scroll-area>
-  </div>
+                <q-scroll-area style="height: 200px; width: 500px">
+                  <div v-for="log in changeLogs" :key="log" class="q-py-xs">
+                    {{ log.Date }}
+                    <q-item-label v-for="text in log.Text" :key="text" caption>
+                      {{ text }}
+                    </q-item-label>
+                  </div>
+                </q-scroll-area>
+              </div>
             </q-card-section>
           </q-card>
         </q-dialog>
@@ -131,14 +129,6 @@
 import { loadChangeLog } from 'src/api';
 
 import { onMounted } from 'vue';
-const changeLogs = ref()
-
-
-onMounted(async () => {
-  await loadChangeLog().then(response => {
-    changeLogs.value = response.data
-  })
-})
 import { ref, watch } from 'vue';
 import { useUser } from '../stores/user';
 import { API_URL } from '../api';
@@ -152,6 +142,14 @@ const leftDrawerOpen = ref(false);
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 }
+
+const changeLogs = ref();
+
+onMounted(async () => {
+  await loadChangeLog().then((response) => {
+    changeLogs.value = response.data;
+  });
+});
 
 watch(
   () => userStore.filledInfo,
