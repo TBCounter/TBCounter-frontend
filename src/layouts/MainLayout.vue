@@ -1,3 +1,4 @@
+
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
@@ -97,15 +98,23 @@
         <q-dialog v-model="changeLog">
           <q-card>
             <q-card-section class="row items-center q-pb-none">
-              <div class="text-h6">How to use?</div>
+              <div class="text-h6">Change Log</div>
               <q-space />
               <q-btn icon="close" flat round dense v-close-popup />
             </q-card-section>
 
             <q-card-section>
-              <q-list bordered separator padding class="rounded-borders">
-                
-              </q-list>
+              <div class="q-ma-md">
+    <q-scroll-area style="height: 200px; width: 500px;">
+      <div v-for="log in changeLogs" :key="log" class="q-py-xs">
+        {{ log.Date }}
+        <q-item-label v-for="text in log.Text" :key="text" caption>
+              {{ text }}
+            </q-item-label>
+        
+      </div>
+    </q-scroll-area>
+  </div>
             </q-card-section>
           </q-card>
         </q-dialog>
@@ -119,6 +128,17 @@
 </template>
 
 <script setup lang="ts">
+import { loadChangeLog } from 'src/api';
+
+import { onMounted } from 'vue';
+const changeLogs = ref()
+
+
+onMounted(async () => {
+  await loadChangeLog().then(response => {
+    changeLogs.value = response.data
+  })
+})
 import { ref, watch } from 'vue';
 import { useUser } from '../stores/user';
 import { API_URL } from '../api';
