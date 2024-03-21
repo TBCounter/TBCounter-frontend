@@ -87,7 +87,8 @@
           </q-card>
         </q-dialog>
 
-        <q-btn
+
+        <q-btn class="q-ml-md"
           color="white"
           icon="error_outline"
           @click="changeLog = true"
