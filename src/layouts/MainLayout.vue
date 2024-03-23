@@ -30,7 +30,7 @@
               <img :src="API_URL + '/' + account.avatar" />
             </q-avatar>
           </q-item-section>
-          <q-item-section>
+          <q-item-section :class="{ 'text-amber-9': account.vip }">
             {{ account.name }}
           </q-item-section>
         </q-item>
