@@ -44,7 +44,7 @@ export function loadChangeLog() {
   return axios.get('/changelog/');
 }
 
-export function register(userData: any) {
+export function register(userData: { email: string; password: string }) {
   return axios.post('/register/', userData);
 }
 
