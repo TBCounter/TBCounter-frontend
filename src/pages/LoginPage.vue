@@ -92,8 +92,6 @@
             type="password"
             label="Repeat password"
           ></q-input>
-          
-          
         </q-card-section>
         <q-card-section>
           <q-btn
@@ -132,9 +130,9 @@ import { watch } from 'vue';
 import { useRouter } from 'vue-router';
 
 import { register } from '../api';
-import { useQuasar } from 'quasar'
+import { useQuasar } from 'quasar';
 
-const $q = useQuasar()
+const $q = useQuasar();
 const jwt = useJWT();
 const router = useRouter();
 
@@ -162,18 +160,18 @@ async function onSubmitLogin() {
 
 async function onSubmitRegister() {
   console.log('fddd');
-   await register({ password: password.value, email: email.value })
-     .then(() => {
-      isLogin.value = true
-       $q.notify('You have been successfuly registered');
+  await register({ password: password.value, email: email.value })
+    .then(() => {
+      isLogin.value = true;
+      $q.notify('You have been successfuly registered');
     })
-     .catch((error) => {
-       console.log(error.response.status);
-       if (error.response.status == 401) {
-         emailError.value = 'Wrong login or password';
-       }
-       return;
-     });
+    .catch((error) => {
+      console.log(error.response.status);
+      if (error.response.status == 401) {
+        emailError.value = 'Wrong login or password';
+      }
+      return;
+    });
 }
 
 watch(email, () => {
