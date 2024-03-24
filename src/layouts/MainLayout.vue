@@ -24,6 +24,13 @@
           clickable
           v-for="account in userStore.accounts"
           :key="account.id"
+          v-ripple
+          @click="
+            $router.push({
+              name: 'account',
+              params: { id: account.id.toString() },
+            })
+          "
         >
           <q-item-section avatar>
             <q-avatar rounded>
@@ -154,6 +161,7 @@ onMounted(async () => {
   await loadChangeLog().then((response) => {
     changeLogs.value = response.data;
   });
+  userStore.fillUserInfo();
 });
 
 watch(

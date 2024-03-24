@@ -6,6 +6,9 @@ import { Cookies } from 'quasar';
 import { Token } from 'src/types';
 
 export const API_URL = process.env.API_URL;
+
+export const WS_URL = process.env.WS_URL;
+
 axios.defaults.baseURL = API_URL;
 
 axios.interceptors.request.use((request) => {
