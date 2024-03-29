@@ -8,7 +8,10 @@
           round
           icon="menu"
           aria-label="Menu"
-          @click="toggleLeftDrawer"
+          @click="
+            miniState = !miniState;
+            hideLabels();
+          "
         />
 
         <q-toolbar-title> Totalbattle counter </q-toolbar-title>
@@ -17,7 +20,14 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
+    <q-drawer
+      v-model="drawer"
+      :mini="miniState"
+      show-if-above
+      bordered
+      :width="200"
+      :breakpoint="500"
+    >
       <q-list>
         <q-item-label header> Your accounts: </q-item-label>
         <q-item
@@ -45,13 +55,15 @@
           </q-item>
         </div>
       </q-list>
+
       <div class="row justify-center q-mt-md">
         <q-btn
+          :class="miniButton"
           color="white"
           icon="help_outline"
           @click="help = true"
           text-color="black"
-          label="Help"
+          :label="helpLabel"
         />
         <q-dialog v-model="help">
           <q-card>
@@ -88,12 +100,12 @@
         </q-dialog>
 
         <q-btn
-          class="q-ml-md"
+          :class="miniButton"
           color="white"
           icon="error_outline"
           @click="changeLog = true"
           text-color="black"
-          label="Change Log"
+          :label="changeLogLabel"
         />
         <q-dialog v-model="changeLog">
           <q-card>
@@ -142,12 +154,26 @@ const help = ref(false);
 const changeLog = ref(false);
 
 const userStore = useUser();
-const leftDrawerOpen = ref(false);
 
-function toggleLeftDrawer() {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
+const miniState = ref(false);
+const miniButton = ref('');
+
+const drawer = ref(true);
+
+const helpLabel = ref('Help');
+const changeLogLabel = ref('Change Log');
+
+function hideLabels() {
+  if (miniState.value) {
+    helpLabel.value = '';
+    changeLogLabel.value = '';
+    miniButton.value = 'q-py-md';
+  } else {
+    helpLabel.value = 'Help';
+    changeLogLabel.value = 'Change Log';
+    miniButton.value = 'q-mb-sm';
+  }
 }
-
 const changeLogs = ref();
 
 onMounted(async () => {
