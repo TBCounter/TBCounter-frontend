@@ -8,10 +8,7 @@
           round
           icon="menu"
           aria-label="Menu"
-          @click="
-            miniState = !miniState;
-            hideLabels();
-          "
+          @click="miniState = !miniState"
         />
 
         <q-toolbar-title> Totalbattle counter </q-toolbar-title>
@@ -56,86 +53,86 @@
         </div>
       </q-list>
 
-      <div class="row justify-center q-mt-md">
+      <div class="column items-center q-mt-md q-gutter-sm">
         <q-btn
-          :class="miniButton"
           color="white"
           icon="help_outline"
           @click="help = true"
           text-color="black"
           :label="helpLabel"
+          :round="miniState"
         />
-        <q-dialog v-model="help">
-          <q-card>
-            <q-card-section class="row items-center q-pb-none">
-              <div class="text-h6">How to use?</div>
-              <q-space />
-              <q-btn icon="close" flat round dense v-close-popup />
-            </q-card-section>
-
-            <q-card-section>
-              <q-list bordered separator padding class="rounded-borders">
-                <q-item> 1. Create an account </q-item>
-                <q-item>
-                  2. Add&nbsp;<a
-                    target="_blank"
-                    href="https://chromewebstore.google.com/detail/count-starter/bpinmpkjgndaaheogageogdkeilggieo?hl=ru"
-                    >chrome extension</a
-                  >&nbsp;to your browser
-                </q-item>
-                <q-item>
-                  3. Open&nbsp;<a target="_blank" href="https://totalbattle.com"
-                    >game</a
-                  >, authorize, open extension and login
-                </q-item>
-                <q-item> 4. Choose account, click collect and start </q-item>
-                <q-item> 5. Wait until you get kicked out of the game </q-item>
-                <q-item>
-                  6. You can watch how service works on the account page (last
-                  screenshot and all chests will appear)
-                </q-item>
-              </q-list>
-            </q-card-section>
-          </q-card>
-        </q-dialog>
 
         <q-btn
-          :class="miniButton"
           color="white"
           icon="error_outline"
           @click="changeLog = true"
           text-color="black"
-          :label="changeLogLabel"
+          :label="miniState ? '' : 'Change log'"
+          :round="miniState"
         />
-        <q-dialog v-model="changeLog">
-          <q-card>
-            <q-card-section>
-              <div class="text-h6">Change Log</div>
-            </q-card-section>
-
-            <q-separator />
-
-            <q-card-section style="max-height: 50vh" class="scroll">
-              <q-item v-for="log in changeLogs" :key="log">
-                <q-item-section>
-                  <q-item-label>{{ log.Date }}</q-item-label>
-                  <q-item-label v-for="text in log.Text" :key="text" caption>
-                    {{ text }}
-                  </q-item-label>
-                </q-item-section>
-              </q-item>
-            </q-card-section>
-
-            <q-separator />
-
-            <q-card-actions align="right">
-              <q-btn flat label="Ok" color="primary" v-close-popup />
-            </q-card-actions>
-          </q-card>
-        </q-dialog>
       </div>
     </q-drawer>
 
+    <q-dialog v-model="help">
+      <q-card>
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6">How to use?</div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+
+        <q-card-section>
+          <q-list bordered separator padding class="rounded-borders">
+            <q-item> 1. Create an account </q-item>
+            <q-item>
+              2. Add&nbsp;<a
+                target="_blank"
+                href="https://chromewebstore.google.com/detail/count-starter/bpinmpkjgndaaheogageogdkeilggieo?hl=ru"
+                >chrome extension</a
+              >&nbsp;to your browser
+            </q-item>
+            <q-item>
+              3. Open&nbsp;<a target="_blank" href="https://totalbattle.com"
+                >game</a
+              >, authorize, open extension and login
+            </q-item>
+            <q-item> 4. Choose account, click collect and start </q-item>
+            <q-item> 5. Wait until you get kicked out of the game </q-item>
+            <q-item>
+              6. You can watch how service works on the account page (last
+              screenshot and all chests will appear)
+            </q-item>
+          </q-list>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
+    <q-dialog v-model="changeLog">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">Change Log</div>
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-section style="max-height: 50vh" class="scroll">
+          <q-item v-for="log in changeLogs" :key="log">
+            <q-item-section>
+              <q-item-label>{{ log.Date }}</q-item-label>
+              <q-item-label v-for="text in log.Text" :key="text" caption>
+                {{ text }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-actions align="right">
+          <q-btn flat label="Ok" color="primary" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -144,9 +141,7 @@
 
 <script setup lang="ts">
 import { loadChangeLog } from 'src/api';
-
-import { onMounted } from 'vue';
-import { ref, watch } from 'vue';
+import { ref, computed, watch, onMounted } from 'vue';
 import { useUser } from '../stores/user';
 import { API_URL } from '../api';
 
@@ -156,24 +151,16 @@ const changeLog = ref(false);
 const userStore = useUser();
 
 const miniState = ref(false);
-const miniButton = ref('');
 
 const drawer = ref(true);
 
-const helpLabel = ref('Help');
-const changeLogLabel = ref('Change Log');
-
-function hideLabels() {
+const helpLabel = computed(() => {
   if (miniState.value) {
-    helpLabel.value = '';
-    changeLogLabel.value = '';
-    miniButton.value = 'q-py-md';
-  } else {
-    helpLabel.value = 'Help';
-    changeLogLabel.value = 'Change Log';
-    miniButton.value = 'q-mb-sm';
+    return '';
   }
-}
+  return 'Help';
+});
+
 const changeLogs = ref();
 
 onMounted(async () => {
