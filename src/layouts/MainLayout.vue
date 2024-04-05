@@ -8,7 +8,10 @@
           round
           icon="menu"
           aria-label="Menu"
-          @click="miniState = !miniState"
+          @click="
+            miniState = !miniState && drawer;
+            drawer = true;
+          "
         />
 
         <q-toolbar-title> Totalbattle counter </q-toolbar-title>
