@@ -1,17 +1,5 @@
 <template>
-  <q-page class="row items-center justify-evenly">
-    Index
-  </q-page>
+  <q-page class="row items-center justify-evenly"> Choose account </q-page>
 </template>
 
-<script setup lang="ts">
-import { useUser } from 'src/stores/user';
-import { onMounted } from 'vue';
-
-const userStore = useUser();
-
-onMounted(()=>{
-  userStore.fillUserInfo()
-})
-
-</script>
+<script setup lang="ts"></script>
