@@ -81,6 +81,15 @@
           :label="miniState ? '' : 'Change log'"
           :round="miniState"
         />
+
+        <q-btn
+          color="white"
+          icon="favorite_outline"
+          @click="support = true"
+          text-color="black"
+          :label="miniState ? '' : 'Support'"
+          :round="miniState"
+        />
       </div>
     </q-drawer>
 
@@ -143,6 +152,38 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <q-dialog v-model="support">
+      <q-card>
+        <q-card-section class="row items-center q-pb-none">
+          <div class="text-h6">Support me</div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+
+        <q-card-section>
+          <q-list>
+            <q-item class="q-mb-md">
+              Financial support helps project to grow and to become more
+              comfortable to use. Donating will give you "VIP" status, which
+              allows you to open chests without any limitations.
+            </q-item>
+            <q-btn
+              class="q-mr-sm"
+              label="Support me on Patreon"
+              color="primary"
+              href="https://www.patreon.com/Omega394"
+              target="_blank"
+            />
+            <q-btn
+              label="Support me on Boosty"
+              color="orange"
+              href="https://boosty.to/omega_soft"
+              target="_blank"
+            />
+          </q-list>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
     <q-page-container>
       <router-view />
     </q-page-container>
@@ -157,6 +198,7 @@ import { API_URL } from '../api';
 
 const help = ref(false);
 const changeLog = ref(false);
+const support = ref(false);
 
 const userStore = useUser();
 
