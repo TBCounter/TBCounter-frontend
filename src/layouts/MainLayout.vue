@@ -2,6 +2,13 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
+        <q-tabs>
+        <q-tab name="chest" icon="diamond" label="Chests" @click="
+            $router.push('/')"/>
+        <q-tab name="report" icon="flag" label="Report" @click="
+            $router.push('/:id/report')"/>
+        
+        </q-tabs>
         <q-btn
           flat
           dense
