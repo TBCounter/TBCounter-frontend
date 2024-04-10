@@ -3,11 +3,18 @@
     <q-header elevated>
       <q-toolbar>
         <q-tabs>
-        <q-tab name="chest" icon="diamond" label="Chests" @click="
-            $router.push('/')"/>
-        <q-tab name="report" icon="flag" label="Report" @click="
-            $router.push('/:id/report')"/>
-        
+          <q-tab
+            name="chest"
+            icon="diamond"
+            label="Chests"
+            @click="$router.push('/')"
+          />
+          <q-tab
+            name="report"
+            icon="flag"
+            label="Report"
+            @click="reportTab()"
+          />
         </q-tabs>
         <q-btn
           flat
@@ -161,6 +168,8 @@ import { loadChangeLog } from 'src/api';
 import { ref, computed, watch, onMounted } from 'vue';
 import { useUser } from '../stores/user';
 import { API_URL } from '../api';
+import { useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 
 const help = ref(false);
 const changeLog = ref(false);
@@ -170,6 +179,15 @@ const userStore = useUser();
 const miniState = ref(false);
 
 const drawer = ref(true);
+
+const router = useRouter();
+const route = useRoute();
+
+const reportTab = () => {
+  if (route.path !== '/') {
+    router.push(route.path + '/report');
+  }
+};
 
 const helpLabel = computed(() => {
   if (miniState.value) {

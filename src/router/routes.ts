@@ -11,6 +11,11 @@ const routes: RouteRecordRaw[] = [
         name: 'account',
         component: () => import('pages/AccountPage.vue'),
       },
+      {
+        path: '/:id',
+        name: 'report',
+        component: () => import('pages/ReportPage.vue'),
+      },
     ],
   },
 
@@ -18,12 +23,6 @@ const routes: RouteRecordRaw[] = [
     path: '/login',
     component: () => import('layouts/LoginLayout.vue'),
     children: [{ path: '', component: () => import('pages/LoginPage.vue') }],
-  },
-
-  {
-    path: '/:id/report',
-    component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/ReportPage.vue') }],
   },
 
   // Always leave this as last one,
