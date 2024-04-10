@@ -32,6 +32,7 @@
         <q-item-label header> Your accounts: </q-item-label>
         <q-item
           clickable
+          :class="{ 'bg-blue-2': account.vip }"
           v-for="account in userStore.accounts"
           :key="account.id"
           v-ripple
@@ -47,7 +48,7 @@
               <img :src="API_URL + '/' + account.avatar" />
             </q-avatar>
           </q-item-section>
-          <q-item-section :class="{ 'text-amber-9': account.vip }">
+          <q-item-section>
             {{ account.name }}
           </q-item-section>
         </q-item>
