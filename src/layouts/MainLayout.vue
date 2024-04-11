@@ -2,20 +2,6 @@
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
-        <q-tabs>
-          <q-tab
-            name="chest"
-            icon="diamond"
-            label="Chests"
-            @click="$router.push('/')"
-          />
-          <q-tab
-            name="report"
-            icon="flag"
-            label="Report"
-            @click="reportTab()"
-          />
-        </q-tabs>
         <q-btn
           flat
           dense
@@ -31,6 +17,22 @@
         <q-toolbar-title> Totalbattle counter </q-toolbar-title>
 
         <q-btn icon="logout" @click="userStore.logout()" dense>log out</q-btn>
+      </q-toolbar>
+      <q-toolbar>
+        <q-tabs>
+          <q-tab
+            name="chest"
+            icon="diamond"
+            label="Chests"
+            @click="chestsTab()"
+          />
+          <q-tab
+            name="report"
+            icon="flag"
+            label="Report"
+            @click="reportTab()"
+          />
+        </q-tabs>
       </q-toolbar>
     </q-header>
 
@@ -184,8 +186,14 @@ const router = useRouter();
 const route = useRoute();
 
 const reportTab = () => {
-  if (route.path !== '/') {
-    router.push(route.path + '/report');
+  if (route.params.id && route.path != '/' + route.params.id + '/report') {
+    router.push(route.params.id + '/report');
+  }
+};
+
+const chestsTab = () => {
+  if (route.params.id && route.path != '/' + route.params.id + '/chests') {
+    router.push(route.params.id + '/chests');
   }
 };
 
