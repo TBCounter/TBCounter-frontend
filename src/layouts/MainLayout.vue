@@ -21,16 +21,18 @@
       <q-toolbar>
         <q-tabs>
           <q-tab
-            name="chest"
+            name="chests"
             icon="diamond"
             label="Chests"
-            @click="chestsTab()"
+            @click="$router.push({
+              name: 'chests'})"
           />
           <q-tab
             name="report"
             icon="flag"
             label="Report"
-            @click="reportTab()"
+            @click="$router.push({
+              name: 'report'})"
           />
         </q-tabs>
       </q-toolbar>
@@ -184,18 +186,6 @@ const drawer = ref(true);
 
 const router = useRouter();
 const route = useRoute();
-
-const reportTab = () => {
-  if (route.params.id && route.path != '/' + route.params.id + '/report') {
-    router.push(route.params.id + '/report');
-  }
-};
-
-const chestsTab = () => {
-  if (route.params.id && route.path != '/' + route.params.id + '/chests') {
-    router.push(route.params.id + '/chests');
-  }
-};
 
 const helpLabel = computed(() => {
   if (miniState.value) {
