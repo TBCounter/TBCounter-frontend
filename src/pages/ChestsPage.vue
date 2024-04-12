@@ -12,6 +12,9 @@
       :rows-per-page-options="[0]"
       :virtual-scroll-item-size="25"
       @virtual-scroll="onScroll"
+      :dense="!$q.screen.lg"
+      wrap-cells
+      :grid="$q.screen.xs"
     />
   </q-page>
 </template>
