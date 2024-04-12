@@ -18,6 +18,17 @@
 
         <q-btn icon="logout" @click="userStore.logout()" dense>log out</q-btn>
       </q-toolbar>
+      <q-toolbar>
+        <q-tabs v-model="activeTab">
+          <q-route-tab
+            name="chests"
+            icon="diamond"
+            label="Chests"
+            to="chests"
+          />
+          <q-route-tab name="report" icon="flag" label="Report" to="report" />
+        </q-tabs>
+      </q-toolbar>
     </q-header>
 
     <q-drawer
@@ -38,7 +49,7 @@
           v-ripple
           @click="
             $router.push({
-              name: 'account',
+              name: 'chests',
               params: { id: account.id.toString() },
             })
           "
@@ -196,6 +207,7 @@ import { loadChangeLog } from 'src/api';
 import { ref, computed, watch, onMounted } from 'vue';
 import { useUser } from '../stores/user';
 import { API_URL } from '../api';
+import { useRoute } from 'vue-router';
 
 const help = ref(false);
 const changeLog = ref(false);
@@ -206,6 +218,17 @@ const userStore = useUser();
 const miniState = ref(false);
 
 const drawer = ref(true);
+
+const route = useRoute();
+
+const activeTab = computed({
+  get() {
+    return route.name?.toString() || '';
+  },
+  set() {
+    return;
+  },
+});
 
 const helpLabel = computed(() => {
   if (miniState.value) {
