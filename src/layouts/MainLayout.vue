@@ -18,28 +18,15 @@
 
         <q-btn icon="logout" @click="userStore.logout()" dense>log out</q-btn>
       </q-toolbar>
-      <q-toolbar v-if="route.params.id">
+      <q-toolbar>
         <q-tabs v-model="activeTab">
-          <q-tab
+          <q-route-tab
             name="chests"
             icon="diamond"
             label="Chests"
-            @click="
-              $router.push({
-                name: 'chests',
-              })
-            "
+            to="chests"
           />
-          <q-tab
-            name="report"
-            icon="flag"
-            label="Report"
-            @click="
-              $router.push({
-                name: 'report',
-              })
-            "
-          />
+          <q-route-tab name="report" icon="flag" label="Report" to="report" />
         </q-tabs>
       </q-toolbar>
     </q-header>
@@ -178,7 +165,6 @@ import { loadChangeLog } from 'src/api';
 import { ref, computed, watch, onMounted } from 'vue';
 import { useUser } from '../stores/user';
 import { API_URL } from '../api';
-import { useRouter } from 'vue-router';
 import { useRoute } from 'vue-router';
 
 const help = ref(false);
@@ -190,7 +176,6 @@ const miniState = ref(false);
 
 const drawer = ref(true);
 
-const router = useRouter();
 const route = useRoute();
 
 const activeTab = computed({

@@ -22,6 +22,7 @@ import { useRoute } from 'vue-router';
 import { WS_URL } from '../api';
 import { getList } from 'src/api';
 import { Component } from 'vue';
+import { onBeforeUnmount } from 'vue';
 
 const route = useRoute();
 const wsConnection = ref<WebSocket>();
@@ -44,7 +45,6 @@ watch(
   () => route.params.id,
   (value) => {
     wsConnection.value?.close();
-    console.log(value);
     updateChestsOpenWS();
   },
   { immediate: true }
@@ -100,6 +100,10 @@ async function updateChestsOpenWS() {
     // console.log("Successfully connected to the echo websocket server...")
   };
 }
+
+onBeforeUnmount(() => {
+  wsConnection.value?.close();
+});
 </script>
 
 <style lang="scss">
