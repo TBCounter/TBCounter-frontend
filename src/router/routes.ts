@@ -7,9 +7,11 @@ const routes: RouteRecordRaw[] = [
     children: [
       { path: '', component: () => import('pages/IndexPage.vue') },
       {
-        path: '/:id',
+        path: '/:id', 
         name: 'account',
-        component: () => import('pages/AccountPage.vue'),
+        redirect: () => {
+          return { name: 'chests' };
+        },
       },
       {
         path: '/:id/report',

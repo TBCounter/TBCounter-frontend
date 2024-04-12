@@ -18,21 +18,27 @@
 
         <q-btn icon="logout" @click="userStore.logout()" dense>log out</q-btn>
       </q-toolbar>
-      <q-toolbar>
-        <q-tabs>
+      <q-toolbar v-if="route.params.id">
+        <q-tabs v-model="activeTab">
           <q-tab
             name="chests"
             icon="diamond"
             label="Chests"
-            @click="$router.push({
-              name: 'chests'})"
+            @click="
+              $router.push({
+                name: 'chests',
+              })
+            "
           />
           <q-tab
             name="report"
             icon="flag"
             label="Report"
-            @click="$router.push({
-              name: 'report'})"
+            @click="
+              $router.push({
+                name: 'report',
+              })
+            "
           />
         </q-tabs>
       </q-toolbar>
@@ -55,7 +61,7 @@
           v-ripple
           @click="
             $router.push({
-              name: 'account',
+              name: 'chests',
               params: { id: account.id.toString() },
             })
           "
@@ -186,6 +192,15 @@ const drawer = ref(true);
 
 const router = useRouter();
 const route = useRoute();
+
+const activeTab = computed({
+  get() {
+    return route.name?.toString() || '';
+  },
+  set() {
+    return;
+  },
+});
 
 const helpLabel = computed(() => {
   if (miniState.value) {
