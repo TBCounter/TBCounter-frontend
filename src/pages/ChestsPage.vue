@@ -17,48 +17,10 @@
       :grid="$q.screen.xs"
     >
       <template v-slot:top-right>
-        <q-btn label="download chests" 
-        @click="selectFromTime = true"> </q-btn>
+        <DownloadChests></DownloadChests>
       </template>
     </q-table>
   </q-page>
-  <q-dialog v-model="selectFromTime">
-    <q-time v-model="firstTimeSelection">
-      <div class="row items-center justify-end q-gutter-sm">
-        <q-btn
-        label="cancel"
-        color="primary"
-        flat
-        v-close-popup
-        />
-        <q-btn
-        label="ok"
-        color="primary"
-        flat
-        v-close-popup
-        @click="selectToTime = true"
-        />
-      </div>
-    </q-time>
-  </q-dialog>
-  <q-dialog v-model="selectToTime">
-    <q-time v-model="secondTimeSelection">
-      <div class="row items-center justify-end q-gutter-sm">
-        <q-btn
-        label="cancel"
-        color="primary"
-        flat
-        v-close-popup
-        />
-        <q-btn
-        label="download"
-        color="primary"
-        flat
-        v-close-popup
-        />
-      </div>
-    </q-time>
-  </q-dialog>
 </template>
 
 <script setup lang="ts">
@@ -68,14 +30,12 @@ import { WS_URL } from '../api';
 import { getList } from 'src/api';
 import { Component } from 'vue';
 import { onBeforeUnmount } from 'vue';
+import DownloadChests from 'src/components/DownloadChests.vue';
 
 const route = useRoute();
 const wsConnection = ref<WebSocket>();
 
 const isLoading = ref(true);
-
-const firstTimeSelection = ref();
-const secondTimeSelection = ref();
 
 const nextPage = ref(1);
 const lastPage = ref(0);
@@ -87,9 +47,6 @@ const columns = [
   { label: 'Время прихода', field: 'got_at', name: 'got_at' },
   { label: 'Время открытия', field: 'opened_in', name: 'opened_in' },
 ];
-
-const selectFromTime = ref(false);
-const selectToTime = ref(false)
 
 const rows = ref([]);
 watch(
