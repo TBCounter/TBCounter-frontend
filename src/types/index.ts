@@ -14,3 +14,14 @@ export type Account = {
   unavailable: boolean;
   vip: boolean;
 };
+
+export type Chest = {
+  check_needed: null;
+  chest_name: string;
+  chest_type: string;
+  got_at: string;
+  id: number;
+  opened_in: string;
+  path: string;
+  player: string;
+};

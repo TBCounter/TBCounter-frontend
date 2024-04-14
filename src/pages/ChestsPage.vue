@@ -5,7 +5,7 @@
       style="height: calc(100vh - 100px)"
       title="Chests"
       virtual-scroll
-      :rows="rows"
+      :rows="computedRows"
       :columns="columns"
       row-key="name"
       :loading="isLoading"
@@ -23,9 +23,10 @@
 import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { WS_URL } from '../api';
-import { getList } from 'src/api';
+import { Chest } from 'src/types';
 import { Component } from 'vue';
 import { onBeforeUnmount } from 'vue';
+import { computed } from 'vue';
 
 const route = useRoute();
 const wsConnection = ref<WebSocket>();
@@ -43,7 +44,18 @@ const columns = [
   { label: 'Время открытия', field: 'opened_in', name: 'opened_in' },
 ];
 
-const rows = ref([]);
+const rows = ref<Chest[]>([]);
+
+const computedRows = computed(() => {
+  return rows.value.map((el) => {
+    const dateGotAt = new Date(el.got_at);
+    const dateOpened = new Date(el.opened_in)
+    el.got_at = dateGotAt.toLocaleString();
+    el.opened_in = dateOpened.toLocaleString();
+    return el;
+  });
+});
+
 watch(
   () => route.params.id,
   (value) => {
