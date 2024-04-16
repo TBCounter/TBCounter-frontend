@@ -42,6 +42,7 @@
 </template>
 
 <script setup lang="ts">
+import { getListFile } from 'src/api';
 import { ref } from 'vue';
 
 const dateSelection = ref(false);
@@ -53,6 +54,27 @@ const timeSelectionSecond = ref(false);
 
 const downloadTimeFirst = ref();
 const downloadTimeSecond = ref();
+
+async function getListFileButton() {
+  const payload = {
+    account_id: acc.value!.id,
+    from: listFrom.value,
+    to: listTo.value,
+    from_time: listFromTime.value,
+    to_time: listToTime.value,
+  };
+  const response = await getListFile(payload);
+  const file = window.URL.createObjectURL(new Blob([response.data]));
+  const link = document.createElement('a');
+  link.href = file;
+
+  link.setAttribute(
+    'download',
+    `report_${payload.account_id}_${payload.from}_${payload.to}.xlsx`
+  );
+  document.body.appendChild(link);
+  link.click();
+}
 </script>
 
 <style scoped lang="scss"></style>
