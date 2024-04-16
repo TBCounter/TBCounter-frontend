@@ -1,37 +1,58 @@
 <template>
-  <q-btn label="download chests" @click="selectFromTime = true"> </q-btn>
-  <q-dialog v-model="selectToTime">
-    <q-time v-model="secondTimeSelection">
+  {{ downloadDate }} {{ downloadTimeFirst }} {{ downloadTimeSecond }}
+  <q-btn label="download chests" @click="dateSelection = true" />
+  <q-dialog v-model="dateSelection">
+    <q-date v-model="downloadDate" range>
       <div class="row items-center justify-end q-gutter-sm">
-        <q-btn label="cancel" color="primary" flat v-close-popup />
-        <q-btn label="download" color="primary" flat v-close-popup />
-      </div>
-    </q-time>
-  </q-dialog>
-  <q-dialog v-model="selectFromTime">
-    <q-time v-model="firstTimeSelection">
-      <div class="row items-center justify-end q-gutter-sm">
-        <q-btn label="cancel" color="primary" flat v-close-popup />
         <q-btn
-          label="ok"
+          @click="timeSelectionFirst = true"
+          class="order-first"
+          icon="access_time"
+          round
           color="primary"
-          flat
-          v-close-popup
-          @click="selectToTime = true"
-        />
+        >
+          <q-dialog v-model="timeSelectionFirst">
+            <q-time v-model="downloadTimeFirst">
+              <div class="row items-center justify-end q-gutter-sm">
+                <q-btn label="Cancel" color="primary" flat v-close-popup />
+                <q-btn
+                  label="OK"
+                  color="primary"
+                  flat
+                  @click="timeSelectionSecond = true"
+                  v-close-popup
+                />
+              </div>
+            </q-time>
+          </q-dialog>
+          <q-dialog v-model="timeSelectionSecond">
+            <q-time v-model="downloadTimeSecond">
+              <div class="row items-center justify-end q-gutter-sm">
+                <q-btn label="Cancel" color="primary" flat v-close-popup />
+                <q-btn label="OK" color="primary" flat v-close-popup />
+              </div>
+            </q-time>
+          </q-dialog>
+        </q-btn>
+        <q-btn label="Cancel" color="primary" flat v-close-popup />
+        <q-btn label="Download" color="primary" flat v-close-popup />
       </div>
-    </q-time>
+    </q-date>
   </q-dialog>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue';
 
-const selectFromTime = ref(false);
-const selectToTime = ref(false);
+const dateSelection = ref(false);
 
-const firstTimeSelection = ref();
-const secondTimeSelection = ref();
+const downloadDate = ref();
+
+const timeSelectionFirst = ref(false);
+const timeSelectionSecond = ref(false);
+
+const downloadTimeFirst = ref();
+const downloadTimeSecond = ref();
 </script>
 
 <style scoped lang="scss"></style>
