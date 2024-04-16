@@ -52,8 +52,8 @@ const downloadDate = ref();
 const timeSelectionFirst = ref(false);
 const timeSelectionSecond = ref(false);
 
-const downloadTimeFirst = ref();
-const downloadTimeSecond = ref();
+const downloadTimeFirst = ref('00:00');
+const downloadTimeSecond = ref('23:59');
 
 async function getListFileButton() {
   const payload = {
