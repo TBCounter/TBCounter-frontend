@@ -120,6 +120,8 @@
             </q-card>
           </div>
         </template>
+
+        <template v-slot:top-left=""> Today opened: {{ today }}</template>
       </q-table>
     </div>
   </q-page>
@@ -144,6 +146,7 @@ const wsConnection = ref<WebSocket>();
 
 const isLoading = ref(true);
 
+const today = ref(0);
 const columns = [
   { label: 'Имя', name: 'player', field: 'player' },
   { label: 'Сундук', field: 'chest_type', name: 'chest_type' },
@@ -189,6 +192,7 @@ watch(
   () => route.params.id,
   () => {
     rows.value = [];
+    today.value = 0;
     pagination.value = {
       page: 1,
       rowsPerPage: 25,
@@ -225,6 +229,7 @@ async function updateChestsOpenWS() {
   wsConnection.value.onmessage = async function (event) {
     const data = JSON.parse(event.data);
     pagination.value.rowsNumber = data.total;
+    today.value = data.today_chests;
     if (pagination.value.page !== 1) {
       return;
     }
