@@ -15,18 +15,22 @@
       :dense="!$q.screen.lg"
       wrap-cells
       :grid="$q.screen.xs"
-    />
+    >
+      <template v-slot:top-right>
+        <DownloadChests :id="+route.params.id"></DownloadChests>
+      </template>
+    </q-table>
   </q-page>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { WS_URL } from '../api';
 import { Chest } from 'src/types';
 import { Component } from 'vue';
 import { onBeforeUnmount } from 'vue';
-import { computed } from 'vue';
+import DownloadChests from 'src/components/DownloadChests.vue';
 
 const route = useRoute();
 const wsConnection = ref<WebSocket>();
@@ -49,7 +53,7 @@ const rows = ref<Chest[]>([]);
 const computedRows = computed(() => {
   return rows.value.map((el) => {
     const dateGotAt = new Date(el.got_at);
-    const dateOpened = new Date(el.opened_in)
+    const dateOpened = new Date(el.opened_in);
     el.got_at = dateGotAt.toLocaleString();
     el.opened_in = dateOpened.toLocaleString();
     return el;
@@ -58,7 +62,7 @@ const computedRows = computed(() => {
 
 watch(
   () => route.params.id,
-  (value) => {
+  () => {
     wsConnection.value?.close();
     updateChestsOpenWS();
   },

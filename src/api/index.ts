@@ -92,7 +92,15 @@ export function getList(id: number, page: number, sort: string) {
   });
 }
 
-export function getListFile(payload: any) {
+type DownloadChestPayload = {
+  account_id: number;
+  from: string;
+  to: string;
+  from_time: string;
+  to_time: string;
+};
+
+export function getListFile(payload: DownloadChestPayload) {
   return axios.post(
     '/list/',
     {
