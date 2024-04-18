@@ -1,8 +1,7 @@
 <template>
-{{ downloadTimeFirst }} {{ downloadTimeSecond }} {{ list.from }} {{ list.to }}
   <q-btn label="download chests" @click="dateSelection = true" />
   <q-dialog v-model="dateSelection">
-    <q-date v-model="list" range>
+    <q-date v-model="list" range mask="YYYY-MM-DD">
       <div class="row items-center justify-end q-gutter-sm">
         <q-btn
           @click="timeSelectionFirst = true"
@@ -67,8 +66,6 @@ const disableButton = ref(false);
 
 const list = ref({ from: '', to: '' });
 
-const listFromTime = ref(downloadTimeFirst);
-const listToTime = ref(downloadTimeSecond);
 
 async function getListFileButton() {
   disableButton.value = true
@@ -76,8 +73,8 @@ async function getListFileButton() {
     account_id: +route.params.id,
     from: list.value.from,
     to: list.value.to,
-    from_time: listFromTime.value,
-    to_time: listToTime.value,
+    from_time: downloadTimeFirst.value,
+    to_time: downloadTimeSecond.value,
   };
   const response = await getListFile(payload);
   const file = window.URL.createObjectURL(new Blob([response.data]));
