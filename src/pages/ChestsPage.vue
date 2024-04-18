@@ -1,25 +1,27 @@
 <template>
   <q-page class="row items-center justify-evenly">
-    <q-table
-      class="table--sticky"
-      style="height: calc(100vh - 100px)"
-      title="Chests"
-      virtual-scroll
-      :rows="computedRows"
-      :columns="columns"
-      row-key="name"
-      :loading="isLoading"
-      :rows-per-page-options="[0]"
-      :virtual-scroll-item-size="25"
-      @virtual-scroll="onScroll"
-      :dense="!$q.screen.lg"
-      wrap-cells
-      :grid="$q.screen.xs"
-    >
-      <template v-slot:top-right>
-        <DownloadChests :id="+route.params.id"></DownloadChests>
-      </template>
-    </q-table>
+    <div class="column">
+      <q-table
+        class="table--sticky"
+        title="Chests"
+        style="min-height: 50vh;"
+        virtual-scroll
+        :rows="computedRows"
+        :columns="columns"
+        row-key="name"
+        :loading="isLoading"
+        :rows-per-page-options="[25]"
+        :virtual-scroll-item-size="25"
+        @virtual-scroll="onScroll"
+        :dense="!$q.screen.lg"
+        wrap-cells
+        :grid="$q.screen.xs"
+      >
+        <template v-slot:top-right>
+          <DownloadChests :id="+route.params.id"></DownloadChests>
+        </template>
+      </q-table>
+    </div>
   </q-page>
 </template>
 

@@ -18,17 +18,14 @@
 
         <q-btn icon="logout" @click="userStore.logout()" dense>log out</q-btn>
       </q-toolbar>
-      <q-toolbar>
-        <q-tabs v-model="activeTab">
-          <q-route-tab
-            name="chests"
-            icon="diamond"
-            label="Chests"
-            to="chests"
-          />
-          <q-route-tab name="report" icon="flag" label="Report" to="report" />
-        </q-tabs>
-      </q-toolbar>
+      <q-tabs v-model="activeTab">
+        <q-route-tab name="chests" icon="redeem" to="chests">
+          <q-tooltip> Chests </q-tooltip></q-route-tab
+        >
+        <q-route-tab name="report" icon="summarize" to="report"
+          ><q-tooltip> Reports </q-tooltip></q-route-tab
+        >
+      </q-tabs>
     </q-header>
 
     <q-drawer
