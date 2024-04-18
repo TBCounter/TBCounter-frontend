@@ -14,7 +14,12 @@
           "
         />
 
-        <q-toolbar-title> Totalbattle counter </q-toolbar-title>
+        <q-toolbar-title>
+          {{
+            userStore.accounts?.find((el) => el.id === +route.params.id)
+              ?.name || 'Totalbattle counter'
+          }}</q-toolbar-title
+        >
 
         <q-btn icon="logout" @click="userStore.logout()" dense>log out</q-btn>
       </q-toolbar>
@@ -40,7 +45,10 @@
         <q-item-label header> Your accounts: </q-item-label>
         <q-item
           clickable
-          :class="{ 'bg-blue-2': account.vip }"
+          :class="{
+            'bg-blue-2': account.vip,
+            'text-bold': account.id === +route.params.id,
+          }"
           v-for="account in userStore.accounts"
           :key="account.id"
           v-ripple

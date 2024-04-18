@@ -84,8 +84,6 @@ const wsConnection = ref<WebSocket>();
 
 const isLoading = ref(true);
 
-const lastPage = ref(0);
-
 const columns = [
   { label: 'Имя', name: 'player', field: 'player' },
   { label: 'Сундук', field: 'chest_type', name: 'chest_type' },
@@ -130,6 +128,7 @@ async function deleteChest(item: Chest) {
 watch(
   () => route.params.id,
   () => {
+    rows.value = [];
     wsConnection.value?.close();
     updateChestsOpenWS();
   },
@@ -156,6 +155,7 @@ async function onRequest(dt: any) {
 }
 
 async function updateChestsOpenWS() {
+  isLoading.value = true;
   wsConnection.value = new WebSocket(WS_URL + 'chests/' + route.params.id);
   wsConnection.value.onmessage = async function (event) {
     const data = JSON.parse(event.data);
