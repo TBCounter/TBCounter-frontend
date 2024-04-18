@@ -16,7 +16,7 @@ export type Account = {
 };
 
 export type Chest = {
-  check_needed: null;
+  check_needed: null | boolean;
   chest_name: string;
   chest_type: string;
   got_at: string;

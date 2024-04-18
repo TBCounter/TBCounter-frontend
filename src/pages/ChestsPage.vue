@@ -8,7 +8,7 @@
         virtual-scroll
         :rows="computedRows"
         :columns="columns"
-        row-key="name"
+        row-key="id"
         :loading="isLoading"
         :rows-per-page-options="[25]"
         :dense="!$q.screen.lg"
@@ -20,6 +20,46 @@
         <template v-slot:top-right>
           <DownloadChests :id="+route.params.id"></DownloadChests>
         </template>
+
+        <template v-slot:body="props">
+          <q-tr
+            :props="props"
+            class="cursor-pointer"
+            :class="{ 'bg-orange': props.row.check_needed }"
+            @click="props.expand = !props.expand"
+          >
+            <q-td v-for="col in props.cols" :key="col.name" :props="props">
+              {{ col.value }}
+            </q-td>
+          </q-tr>
+          <q-tr v-if="props.expand" :props="props">
+            <q-td colspan="100%">
+              <img
+                :src="
+                  props.row.path.startsWith('H://TotalBattle/')
+                    ? API_URL + '/' + props.row.path.substring(16)
+                    : API_URL + '/' + props.row.path
+                "
+              />
+              <img
+                v-if="props.row.check_needed"
+                :src="
+                  props.row.check_needed.startsWith('H://TotalBattle/')
+                    ? API_URL + '/' + props.row.check_needed.substring(16)
+                    : API_URL + '/' + props.row.check_needed
+                "
+              />
+              <q-btn @click="saveChest(props.row)" v-if="props.row.check_needed"
+                >сохранить</q-btn
+              >
+              <q-btn
+                @click="deleteChest(props.row)"
+                v-if="props.row.check_needed"
+                >удалить</q-btn
+              >
+            </q-td>
+          </q-tr>
+        </template>
       </q-table>
     </div>
   </q-page>
@@ -28,7 +68,13 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { WS_URL, getList } from '../api';
+import {
+  WS_URL,
+  API_URL,
+  getList,
+  saveChestRequest,
+  deleteChestRequest,
+} from '../api';
 import { Chest } from 'src/types';
 import { onBeforeUnmount } from 'vue';
 import DownloadChests from 'src/components/DownloadChests.vue';
@@ -66,6 +112,21 @@ const computedRows = computed(() => {
     return el;
   });
 });
+
+async function saveChest(item: Chest) {
+  await saveChestRequest(item.id).then(() => {
+    item.check_needed = false;
+  });
+}
+
+async function deleteChest(item: Chest) {
+  await deleteChestRequest(item.id).then(() => {
+    // delete(item)
+    rows.value = rows.value.filter((el) => {
+      return el.id !== item.id;
+    });
+  });
+}
 
 watch(
   () => route.params.id,
