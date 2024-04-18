@@ -35,6 +35,7 @@
           <q-tr v-if="props.expand" :props="props">
             <q-td colspan="100%">
               <img
+                style="max-width: 100%"
                 :src="
                   props.row.path.startsWith('H://TotalBattle/')
                     ? API_URL + '/' + props.row.path.substring(16)
@@ -42,6 +43,7 @@
                 "
               />
               <img
+                style="max-width: 100%"
                 v-if="props.row.check_needed"
                 :src="
                   props.row.check_needed.startsWith('H://TotalBattle/')
@@ -59,6 +61,64 @@
               >
             </q-td>
           </q-tr>
+        </template>
+
+        <template v-slot:item="props">
+          <div
+            class="q-pa-xs col-xs-12 col-sm-6 col-md-4 col-lg-3 grid-style-transition"
+            :style="props.selected ? 'transform: scale(0.95);' : ''"
+          >
+            <q-card
+              bordered
+              flat
+              :class="{
+                'bg-orange': props.row.check_needed,
+              }"
+              class="cursor-pointer"
+              @click="props.expand = !props.expand"
+            >
+              <q-list dense>
+                <q-item v-for="col in props.cols" :key="col.name">
+                  <q-item-section>
+                    <q-item-label>{{ col.label }}</q-item-label>
+                  </q-item-section>
+                  <q-item-section side>
+                    <q-item-label>{{ col.value }}</q-item-label>
+                  </q-item-section>
+                </q-item>
+              </q-list>
+              <q-separator v-if="props.expand" />
+              <q-card-section class="q-pa-xs" v-if="props.expand">
+                <img
+                  style="max-width: 100%"
+                  :src="
+                    props.row.path.startsWith('H://TotalBattle/')
+                      ? API_URL + '/' + props.row.path.substring(16)
+                      : API_URL + '/' + props.row.path
+                  "
+                />
+                <img
+                  style="max-width: 100%"
+                  v-if="props.row.check_needed"
+                  :src="
+                    props.row.check_needed.startsWith('H://TotalBattle/')
+                      ? API_URL + '/' + props.row.check_needed.substring(16)
+                      : API_URL + '/' + props.row.check_needed
+                  "
+                />
+                <q-btn
+                  @click="saveChest(props.row)"
+                  v-if="props.row.check_needed"
+                  >сохранить</q-btn
+                >
+                <q-btn
+                  @click="deleteChest(props.row)"
+                  v-if="props.row.check_needed"
+                  >удалить</q-btn
+                >
+              </q-card-section>
+            </q-card>
+          </div>
         </template>
       </q-table>
     </div>
@@ -129,6 +189,11 @@ watch(
   () => route.params.id,
   () => {
     rows.value = [];
+    pagination.value = {
+      page: 1,
+      rowsPerPage: 25,
+      rowsNumber: 0,
+    };
     wsConnection.value?.close();
     updateChestsOpenWS();
   },
