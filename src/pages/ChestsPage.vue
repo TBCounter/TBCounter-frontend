@@ -84,7 +84,6 @@ const wsConnection = ref<WebSocket>();
 
 const isLoading = ref(true);
 
-const nextPage = ref(1);
 const lastPage = ref(0);
 
 const columns = [
@@ -138,7 +137,7 @@ watch(
 );
 
 async function onRequest(dt: any) {
-  if (isLoading.value !== true && nextPage.value < lastPage.value) {
+  if (isLoading.value !== true) {
     isLoading.value = true;
 
     console.log(pagination, 'pags');
@@ -160,12 +159,14 @@ async function updateChestsOpenWS() {
   wsConnection.value = new WebSocket(WS_URL + 'chests/' + route.params.id);
   wsConnection.value.onmessage = async function (event) {
     const data = JSON.parse(event.data);
+    pagination.value.rowsNumber = data.total;
+    if (pagination.value.page !== 1) {
+      return;
+    }
     console.log('message', data);
     rows.value = data.chests;
+    pagination.value.page = 1;
     isLoading.value = false;
-    nextPage.value = data.page + 1;
-    lastPage.value = data.total_pages;
-    pagination.value.rowsNumber = data.total;
   };
 
   wsConnection.value.onopen = function (event) {
