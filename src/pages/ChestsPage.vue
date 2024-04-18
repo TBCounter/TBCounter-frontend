@@ -4,18 +4,18 @@
       <q-table
         class="table--sticky"
         title="Chests"
-        style="min-height: 50vh;"
+        style="min-height: 50vh"
         virtual-scroll
         :rows="computedRows"
         :columns="columns"
         row-key="name"
         :loading="isLoading"
         :rows-per-page-options="[25]"
-        :virtual-scroll-item-size="25"
-        @virtual-scroll="onScroll"
         :dense="!$q.screen.lg"
         wrap-cells
         :grid="$q.screen.xs"
+        v-model:pagination="pagination"
+        @request="onRequest"
       >
         <template v-slot:top-right>
           <DownloadChests :id="+route.params.id"></DownloadChests>
@@ -28,9 +28,8 @@
 <script setup lang="ts">
 import { ref, watch, computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { WS_URL } from '../api';
+import { WS_URL, getList } from '../api';
 import { Chest } from 'src/types';
-import { Component } from 'vue';
 import { onBeforeUnmount } from 'vue';
 import DownloadChests from 'src/components/DownloadChests.vue';
 
@@ -52,6 +51,12 @@ const columns = [
 
 const rows = ref<Chest[]>([]);
 
+const pagination = ref({
+  page: 1,
+  rowsPerPage: 25,
+  rowsNumber: 0,
+});
+
 const computedRows = computed(() => {
   return rows.value.map((el) => {
     const dateGotAt = new Date(el.got_at);
@@ -71,23 +76,21 @@ watch(
   { immediate: true }
 );
 
-async function onScroll(details: {
-  index: number;
-  from: number;
-  to: number;
-  direction: 'increase' | 'decrease';
-  ref: Component;
-}) {
-  console.log(details);
-  const lastIndex = rows.value.length - 1;
-  if (
-    isLoading.value !== true &&
-    nextPage.value < lastPage.value &&
-    details.to === lastIndex
-  ) {
+async function onRequest(dt: any) {
+  if (isLoading.value !== true && nextPage.value < lastPage.value) {
     isLoading.value = true;
 
-    console.log(nextPage);
+    console.log(pagination, 'pags');
+
+    await getList(+route.params.id, dt.pagination.page, '-opened_in').then(
+      (dt) => {
+        const data = dt.data;
+        pagination.value.page = data.page;
+        pagination.value.rowsNumber = data.total;
+        isLoading.value = false;
+        rows.value = data.items;
+      }
+    );
   }
   return;
 }
@@ -101,19 +104,7 @@ async function updateChestsOpenWS() {
     isLoading.value = false;
     nextPage.value = data.page + 1;
     lastPage.value = data.total_pages;
-
-    // if (!sorting.value && page.value == 1) {
-    //   const data = JSON.parse(event.data);
-    //   chests.value = data.chests;
-    //   total.value = data.total;
-    //   today.value = data.today_chests;
-    //   await getAccountStateImage(acc.value!.id).then((response) => {
-    //     if (statusImage.value && response) {
-    //       statusImage.value = '';
-    //     }
-    //     statusImage.value = response;
-    //   });
-    // }
+    pagination.value.rowsNumber = data.total;
   };
 
   wsConnection.value.onopen = function (event) {
