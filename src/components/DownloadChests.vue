@@ -1,8 +1,8 @@
 <template>
-  {{ downloadDate }} {{ downloadTimeFirst }} {{ downloadTimeSecond }}
+{{ downloadTimeFirst }} {{ downloadTimeSecond }} {{ list.from }} {{ list.to }}
   <q-btn label="download chests" @click="dateSelection = true" />
   <q-dialog v-model="dateSelection">
-    <q-date v-model="downloadDate" range>
+    <q-date v-model="list" range>
       <div class="row items-center justify-end q-gutter-sm">
         <q-btn
           @click="timeSelectionFirst = true"
@@ -35,7 +35,14 @@
           </q-dialog>
         </q-btn>
         <q-btn label="Cancel" color="primary" flat v-close-popup />
-        <q-btn label="Download" color="primary" flat v-close-popup />
+        <q-btn
+          label="Download"
+          color="primary"
+          @click="getListFileButton"
+          :disable="disableButton"
+          flat
+          v-close-popup
+        />
       </div>
     </q-date>
   </q-dialog>
@@ -44,10 +51,11 @@
 <script setup lang="ts">
 import { getListFile } from 'src/api';
 import { ref } from 'vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
 
 const dateSelection = ref(false);
-
-const downloadDate = ref();
 
 const timeSelectionFirst = ref(false);
 const timeSelectionSecond = ref(false);
@@ -55,11 +63,19 @@ const timeSelectionSecond = ref(false);
 const downloadTimeFirst = ref('00:00');
 const downloadTimeSecond = ref('23:59');
 
+const disableButton = ref(false);
+
+const list = ref({ from: '', to: '' });
+
+const listFromTime = ref(downloadTimeFirst);
+const listToTime = ref(downloadTimeSecond);
+
 async function getListFileButton() {
+  disableButton.value = true
   const payload = {
-    account_id: acc.value!.id,
-    from: listFrom.value,
-    to: listTo.value,
+    account_id: +route.params.id,
+    from: list.value.from,
+    to: list.value.to,
     from_time: listFromTime.value,
     to_time: listToTime.value,
   };
@@ -74,7 +90,9 @@ async function getListFileButton() {
   );
   document.body.appendChild(link);
   link.click();
+  disableButton.value = false
 }
+
 </script>
 
 <style scoped lang="scss"></style>
