@@ -1,5 +1,5 @@
 <template>
-  <q-btn label="download chests" @click="dateSelection = true" />
+  <q-btn icon="download" @click="dateSelection = true" />
   <q-dialog v-model="dateSelection">
     <q-date v-model="list" range mask="YYYY-MM-DD">
       <div class="row items-center justify-end q-gutter-sm">
@@ -11,26 +11,36 @@
           color="primary"
         >
           <q-dialog v-model="timeSelectionFirst">
-            <q-time v-model="downloadTimeFirst">
-              <div class="row items-center justify-end q-gutter-sm">
-                <q-btn label="Cancel" color="primary" flat v-close-popup />
-                <q-btn
-                  label="OK"
-                  color="primary"
-                  flat
-                  @click="timeSelectionSecond = true"
-                  v-close-popup
-                />
-              </div>
-            </q-time>
+            <q-card>
+              <q-card-section>
+                <div class="text-h6">From</div>
+              </q-card-section>
+              <q-time format24h v-model="downloadTimeFirst">
+                <div class="row items-center justify-end q-gutter-sm">
+                  <q-btn label="Cancel" color="primary" flat v-close-popup />
+                  <q-btn
+                    label="OK"
+                    color="primary"
+                    flat
+                    @click="timeSelectionSecond = true"
+                    v-close-popup
+                  />
+                </div>
+              </q-time>
+            </q-card>
           </q-dialog>
           <q-dialog v-model="timeSelectionSecond">
-            <q-time v-model="downloadTimeSecond">
-              <div class="row items-center justify-end q-gutter-sm">
-                <q-btn label="Cancel" color="primary" flat v-close-popup />
-                <q-btn label="OK" color="primary" flat v-close-popup />
-              </div>
-            </q-time>
+            <q-card>
+              <q-card-section>
+                <div class="text-h6">To</div>
+              </q-card-section>
+              <q-time format24h v-model="downloadTimeSecond">
+                <div class="row items-center justify-end q-gutter-sm">
+                  <q-btn label="Cancel" color="primary" flat v-close-popup />
+                  <q-btn label="OK" color="primary" flat v-close-popup />
+                </div>
+              </q-time>
+            </q-card>
           </q-dialog>
         </q-btn>
         <q-btn label="Cancel" color="primary" flat v-close-popup />
@@ -40,7 +50,6 @@
           @click="getListFileButton"
           :disable="disableButton"
           flat
-          v-close-popup
         />
       </div>
     </q-date>
@@ -50,9 +59,12 @@
 <script setup lang="ts">
 import { getListFile } from 'src/api';
 import { ref } from 'vue';
-import { useRoute } from 'vue-router';
 
-const route = useRoute();
+type Props = {
+  id: number;
+};
+
+const props = defineProps<Props>();
 
 const dateSelection = ref(false);
 
@@ -66,11 +78,10 @@ const disableButton = ref(false);
 
 const list = ref({ from: '', to: '' });
 
-
 async function getListFileButton() {
-  disableButton.value = true
+  disableButton.value = true;
   const payload = {
-    account_id: +route.params.id,
+    account_id: props.id,
     from: list.value.from,
     to: list.value.to,
     from_time: downloadTimeFirst.value,
@@ -87,9 +98,8 @@ async function getListFileButton() {
   );
   document.body.appendChild(link);
   link.click();
-  disableButton.value = false
+  disableButton.value = false;
 }
-
 </script>
 
 <style scoped lang="scss"></style>
