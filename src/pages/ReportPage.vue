@@ -21,9 +21,11 @@
           </q-td>
           <q-td key="days" :props="props">
             {{
-              Math.round(
-                (props.row.to.getTime() - props.row.from.getTime()) /
-                  (1000 * 60 * 60 * 24)
+              getDays(
+                props.row.to,
+                props.row.toTime,
+                props.row.from,
+                props.row.fromTime
               )
             }}
           </q-td>
@@ -80,4 +82,37 @@ onMounted(async () => {
     reportsList.value = response.data;
   });
 });
+
+function getDays(to: Date, toTime: string, from: Date, fromTime: string) {
+  let toTimeGlobal = 0;
+  let fromTimeGlobal = 0;
+  if (to) {
+    toTimeGlobal = to.getTime();
+  }
+  if (toTime) {
+    const hours = toTime.split(':')[0];
+    const minutes = toTime.split(':')[1];
+    toTimeGlobal += parseInt(hours) * 60 * 60 * 1000;
+    toTimeGlobal += parseInt(minutes) * 60 * 1000;
+  }
+
+  if (from) {
+    fromTimeGlobal = from.getTime();
+  }
+  if (fromTime) {
+    const hours = fromTime.split(':')[0];
+    const minutes = fromTime.split(':')[1];
+    fromTimeGlobal += parseInt(hours) * 60 * 60 * 1000;
+    fromTimeGlobal += parseInt(minutes) * 60 * 1000;
+  }
+  // Math.round(
+  //   (props.row.to.getTime() - props.row.from.getTime())
+  // );
+
+  const result = Math.round((toTimeGlobal - fromTimeGlobal) / (1000 * 60 * 60 * 24));
+  if(!result){
+    return 'inf'
+  }
+  return result
+}
 </script>
