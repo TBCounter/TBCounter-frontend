@@ -63,7 +63,13 @@ export function saveReport(payload: any) {
   });
 }
 
-export function setNewAccount(payload: any) {
+export function setNewAccount(payload: {
+  login: string;
+  password?: string;
+  isTriumph: boolean;
+  name: string;
+  clan: string;
+}) {
   return axios.post('/info/', payload);
 }
 
