@@ -83,7 +83,7 @@
             <q-avatar>+</q-avatar>
           </q-item-section>
           <q-item-section>add new</q-item-section>
-          <NewAccountModal v-model="newAccount" />
+          <NewAccountModal @success="onSuccess" v-model="newAccount" />
         </q-item>
       </q-list>
 
@@ -134,6 +134,10 @@ const activeTab = computed({
 onMounted(async () => {
   userStore.fillUserInfo();
 });
+
+const onSuccess = () => {
+  userStore.fillUserInfo();
+};
 
 const help = ref(false);
 
