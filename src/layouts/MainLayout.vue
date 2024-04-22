@@ -23,7 +23,10 @@
 
         <q-btn icon="logout" @click="userStore.logout()" dense>log out</q-btn>
       </q-toolbar>
-      <q-tabs v-model="activeTab">
+      <q-tabs
+        v-model="activeTab"
+        v-if="['chests', 'report'].includes(route.name as string || '')"
+      >
         <q-route-tab name="chests" icon="redeem" to="chests">
           <q-tooltip> Chests </q-tooltip></q-route-tab
         >
