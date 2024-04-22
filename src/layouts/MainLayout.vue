@@ -78,11 +78,12 @@
             </q-item-section>
           </q-item>
         </div>
-        <q-item clickable v-ripple>
+        <q-item clickable @click="newAccount = true" v-ripple>
           <q-item-section avatar>
             <q-avatar>+</q-avatar>
           </q-item-section>
           <q-item-section>add new</q-item-section>
+          <NewAccountModal v-model="newAccount" />
         </q-item>
       </q-list>
 
@@ -107,6 +108,7 @@ import { useRoute } from 'vue-router';
 import HelpModal from 'src/components/Modals/HelpModal.vue';
 import ChangeLogModal from 'src/components/Modals/ChangeLogModal.vue';
 import SupportModal from 'src/components/Modals/SupportModal.vue';
+import NewAccountModal from 'src/components/Modals/NewAccountModal.vue';
 
 const support = ref(false);
 
@@ -117,6 +119,8 @@ const miniState = ref(false);
 const drawer = ref(true);
 
 const route = useRoute();
+
+const newAccount = ref(false);
 
 const activeTab = computed({
   get() {
