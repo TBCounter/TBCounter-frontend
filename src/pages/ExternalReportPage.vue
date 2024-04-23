@@ -4,16 +4,62 @@
     :key="level.level"
     dense
     :rows="level.data"
-    :columns="columns"
+    :columns="allColumns"
     row-key="name"
-    virtual-scroll
     :rows-per-page-options="[0]"
-    class="sticky-header sticky-row"
-  ></q-table>
+    class="sticky-header sticky-row q-mt-md"
+  >
+    <template v-slot:header="props">
+      <q-tr :props="props">
+        <template v-for="(col, index) in allColumns" :key="col.name">
+          <q-th
+            style="
+              max-width: 15px;
+              white-space: nowrap;
+              overflow: visible;
+              background: transparent;
+              overflow-wrap: normal;
+              white-space: normal;
+            "
+          >
+            <div
+              v-if="
+                col.name?.split(/(\d+)/)[1] &&
+                col.name?.split(/(\d+)/)[0] !==
+                  allColumns[index - 1]?.name?.split(/(\d+)/)[0]
+              "
+              style="overflow: visible;white-space: normal; overflow-wrap: normal"
+            >
+              {{ col.name?.split(/(\d+)/)[0] }}
+            </div>
+          </q-th>
+        </template>
+      </q-tr>
+      <q-tr :props="props">
+        <q-th
+          style="background: white"
+          :style="{ 'z-index:100': col.name === 'name' }"
+          :key="col.name"
+          v-for="col in allColumns"
+        >
+          <div v-if="col.name?.split(/(\d+)/)[1]">
+            {{ col.name?.split(/(\d+)/)[1] }}
+          </div>
+          <div
+            v-else
+            style="transform: rotate(180deg); writing-mode: vertical-rl"
+          >
+            {{ col.name?.split(/(\d+)/)[0] }}
+          </div>
+        </q-th>
+      </q-tr>
+    </template>
+  </q-table>
 </template>
 
 <script setup lang="ts">
 import { getClanReport } from 'src/api';
+import { computed } from 'vue';
 import { ref } from 'vue';
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
@@ -36,7 +82,37 @@ type BackSchema = {
   frozen: boolean;
   headerFilter: string;
   title: string;
+  columns?: BackSchema[];
 };
+
+const allColumns = computed(() => {
+  return [...columns.value]
+
+    .reduce((accumulator: any[], currentValue: any) => {
+      if (currentValue.columns) {
+        const addColumn = currentValue.columns.map((el: any) => {
+          return { ...el, name: el.field };
+        });
+        accumulator = [...accumulator, ...addColumn];
+      } else {
+        accumulator = [...accumulator, currentValue];
+      }
+      return accumulator;
+    }, [])
+    .sort((a, b) => {
+      const nameA = a.name?.toUpperCase(); // ignore upper and lowercase
+      const nameB = b.name?.toUpperCase(); // ignore upper and lowercase
+      if (nameA < nameB) {
+        return -1;
+      }
+      if (nameA > nameB) {
+        return 1;
+      }
+
+      // names must be equal
+      return 0;
+    });
+});
 
 onMounted(async () => {
   const response = await getClanReport(hash);
@@ -48,11 +124,14 @@ onMounted(async () => {
   columns.value = response.data.schema.map((schema: BackSchema) => {
     return {
       name: schema.field,
+      // name: schema.title,
       label: schema.title,
       field: schema.field,
       required: schema.field === 'name',
-      sortable: true,
+      sortable: schema.field === 'name',
       classes: schema.cssClass,
+      columns: schema.columns,
+      align: 'right',
     };
   });
   console.log(columns.value);
@@ -60,6 +139,13 @@ onMounted(async () => {
   to.value = response.data.to;
   lastChest.value = response.data.last;
 });
+
+function processKey(key: string) {
+  const myKey = key.split(/(\d+)/);
+  // console.log(myKey);
+
+  return myKey;
+}
 </script>
 
 <style lang="scss">
@@ -68,7 +154,7 @@ onMounted(async () => {
 
   .q-table__top,
   .q-table__bottom,
-  thead tr:first-child th {
+  thead tr th {
     /* bg color is important for th; just specify one */
     background-color: white;
   }
@@ -77,9 +163,9 @@ onMounted(async () => {
     position: sticky;
     z-index: 2;
   }
-  thead tr:first-child th {
+  thead tr th {
     top: 0;
-    z-index: 2;
+    z-index: 5;
   }
 
   /* this is when the loading indicator appears */
