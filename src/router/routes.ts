@@ -37,6 +37,18 @@ const routes: RouteRecordRaw[] = [
     children: [{ path: '', component: () => import('pages/LoginPage.vue') }],
   },
 
+  {
+    path: '/clan-report',
+    name: 'external',
+    component: () => import('layouts/ExternalLayout.vue'),
+    children: [
+      {
+        path: ':hash',
+        component: () => import('pages/ExternalReportPage.vue'),
+      },
+    ],
+  },
+
   // Always leave this as last one,
   // but you can also remove it
   {
