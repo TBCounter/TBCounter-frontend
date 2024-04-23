@@ -5,9 +5,13 @@ const routes: RouteRecordRaw[] = [
     path: '/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
-      { path: '', component: () => import('pages/IndexPage.vue') },
       {
-        path: '/:id', 
+        path: '',
+        name: 'index',
+        component: () => import('pages/IndexPage.vue'),
+      },
+      {
+        path: '/:id',
         name: 'account',
         redirect: () => {
           return { name: 'chests' };
@@ -28,14 +32,28 @@ const routes: RouteRecordRaw[] = [
 
   {
     path: '/login',
+    name: 'login',
     component: () => import('layouts/LoginLayout.vue'),
     children: [{ path: '', component: () => import('pages/LoginPage.vue') }],
+  },
+
+  {
+    path: '/clan-report',
+    name: 'external',
+    component: () => import('layouts/ExternalLayout.vue'),
+    children: [
+      {
+        path: ':hash',
+        component: () => import('pages/ExternalReportPage.vue'),
+      },
+    ],
   },
 
   // Always leave this as last one,
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
+    name: 'notFound',
     component: () => import('pages/ErrorNotFound.vue'),
   },
 ];

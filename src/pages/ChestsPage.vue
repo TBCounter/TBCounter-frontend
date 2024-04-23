@@ -5,7 +5,6 @@
         class="table--sticky"
         title="Chests"
         style="min-height: 50vh"
-        virtual-scroll
         :rows="computedRows"
         :columns="columns"
         row-key="id"

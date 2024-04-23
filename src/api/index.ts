@@ -209,3 +209,7 @@ export function getAccountStateImage(account_id: number) {
       Buffer.from(response.data, 'binary').toString('base64')
     );
 }
+
+export function getReportList(account_id: number) {
+  return axios.get('/report-list/', { params: { account_id } });
+}
