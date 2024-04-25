@@ -9,6 +9,13 @@
       style="min-height: 50vh"
       :rows-per-page-options="[10]"
     >
+      <template v-slot:top-right>
+        <AddReport
+          :id="+route.params.id"
+          v-on:new-report="newReport"
+        ></AddReport>
+      </template>
+
       <template v-slot:body="props">
         <q-tr :props="props">
           <q-td key="from" :props="props">
@@ -44,9 +51,9 @@ import { computed } from 'vue';
 import { ref } from 'vue';
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import AddReport from 'src/components/AddReport.vue';
 
 const route = useRoute();
-
 type ReportList = { hash: string; query: string };
 
 const reportsList = ref<ReportList[]>();
@@ -65,7 +72,7 @@ const generateLink = (hash: string) => {
 const unpackedReportsList = computed(() => {
   return reportsList.value
     ?.map((el) => {
-      const query = JSON.parse(el.query);
+      const query = JSON.parse(el.query)
       return {
         from: new Date(query.from),
         fromTime: query.from_time,
@@ -76,6 +83,13 @@ const unpackedReportsList = computed(() => {
     })
     .reverse();
 });
+
+function newReport(event: any) {
+  const report = event.value;
+
+  unpackedReportsList.value?.push(report)
+  console.log(unpackedReportsList)
+}
 
 onMounted(async () => {
   await getReportList(parseInt(route.params.id as string)).then((response) => {
@@ -109,10 +123,12 @@ function getDays(to: Date, toTime: string, from: Date, fromTime: string) {
   //   (props.row.to.getTime() - props.row.from.getTime())
   // );
 
-  const result = Math.round((toTimeGlobal - fromTimeGlobal) / (1000 * 60 * 60 * 24));
-  if(!result){
-    return 'inf'
+  const result = Math.round(
+    (toTimeGlobal - fromTimeGlobal) / (1000 * 60 * 60 * 24)
+  );
+  if (!result) {
+    return 'inf';
   }
-  return result
+  return result;
 }
 </script>
