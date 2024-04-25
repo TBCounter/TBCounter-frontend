@@ -21,6 +21,7 @@
               overflow-wrap: normal;
               white-space: normal;
             "
+            :class="col.classes"
           >
             <div
               v-if="
@@ -28,7 +29,11 @@
                 col.name?.split(/(\d+)/)[0] !==
                   allColumns[index - 1]?.name?.split(/(\d+)/)[0]
               "
-              style="overflow: visible;white-space: normal; overflow-wrap: normal"
+              style="
+                overflow: visible;
+                white-space: normal;
+                overflow-wrap: normal;
+              "
             >
               {{ col.name?.split(/(\d+)/)[0] }}
             </div>
@@ -91,7 +96,7 @@ const allColumns = computed(() => {
     .reduce((accumulator: any[], currentValue: any) => {
       if (currentValue.columns) {
         const addColumn = currentValue.columns.map((el: any) => {
-          return { ...el, name: el.field };
+          return { ...el, name: el.field, classes: el.classes };
         });
         accumulator = [...accumulator, ...addColumn];
       } else {
@@ -139,13 +144,6 @@ onMounted(async () => {
   to.value = response.data.to;
   lastChest.value = response.data.last;
 });
-
-function processKey(key: string) {
-  const myKey = key.split(/(\d+)/);
-  // console.log(myKey);
-
-  return myKey;
-}
 </script>
 
 <style lang="scss">
@@ -197,6 +195,38 @@ function processKey(key: string) {
     position: sticky;
     left: 0;
     z-index: 1;
+  }
+}
+
+.report-table__column--name {
+  background: red;
+}
+
+$colors: rgba(134, 163, 184, 0.2), rgba(232, 210, 166, 0.2),
+  rgba(244, 132, 132, 0.2), rgba(194, 118, 100, 0.2), rgba(60, 125, 147, 0.2),
+  rgba(168, 135, 36, 0.2), rgba(17, 33, 92, 0.2), rgba(199, 199, 172, 0.2),
+  rgba(51, 13, 18, 0.2), rgba(60, 108, 63, 0.2), rgba(227, 199, 112, 0.2),
+  rgba(63, 0, 113, 0.2), rgba(251, 37, 118, 0.2);
+
+.report-table__column {
+  @each $color in $colors {
+    $i: index($colors, $color);
+
+    &--index#{$i} {
+      background-color: $color;
+
+      & .tabulator-col {
+        background-color: $color;
+      }
+    }
+  }
+
+  &--scores {
+    background-color: rgba(154, 61, 154, 0.345);
+  }
+
+  &--sum {
+    background-color: rgba(217, 217, 82, 0.263);
   }
 }
 </style>
