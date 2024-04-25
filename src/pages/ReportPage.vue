@@ -9,6 +9,15 @@
       style="min-height: 50vh"
       :rows-per-page-options="[10]"
     >
+      <template v-slot:top-right>
+        <TimePicker
+          :id="+route.params.id"
+          :disable-button="disableDownloadButton"
+          @selected="createNewReport"
+          icon="add"
+          tooltip="Create report"
+        />
+      </template>
       <template v-slot:body="props">
         <q-tr :props="props">
           <q-td key="from" :props="props">
@@ -39,7 +48,8 @@
 </template>
 
 <script setup lang="ts">
-import { getReportList } from 'src/api';
+import { getReportList, saveReport } from 'src/api';
+import { TimePickerType } from 'src/types';
 import { computed } from 'vue';
 import { ref } from 'vue';
 import { onMounted } from 'vue';
@@ -109,10 +119,18 @@ function getDays(to: Date, toTime: string, from: Date, fromTime: string) {
   //   (props.row.to.getTime() - props.row.from.getTime())
   // );
 
-  const result = Math.round((toTimeGlobal - fromTimeGlobal) / (1000 * 60 * 60 * 24));
-  if(!result){
-    return 'inf'
+  const result = Math.round(
+    (toTimeGlobal - fromTimeGlobal) / (1000 * 60 * 60 * 24)
+  );
+  if (!result) {
+    return 'inf';
   }
-  return result
+  return result;
+}
+
+const disableDownloadButton = ref(false);
+
+async function createNewReport(payload: TimePickerType) {
+  await saveReport(payload)
 }
 </script>

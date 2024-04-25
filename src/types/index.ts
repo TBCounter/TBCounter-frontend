@@ -25,3 +25,11 @@ export type Chest = {
   path: string;
   player: string;
 };
+
+export type TimePickerType = {
+  account_id: number;
+  from: string;
+  to: string;
+  from_time: string;
+  to_time: string;
+};

@@ -3,7 +3,7 @@ import axios, { AxiosResponse } from 'axios';
 import { useUser } from '../stores/user';
 import { useJWT } from '../stores/jwt';
 import { Cookies } from 'quasar';
-import { Token } from 'src/types';
+import { TimePickerType, Token } from 'src/types';
 
 export const API_URL = process.env.API_URL;
 
@@ -57,13 +57,7 @@ export function getReport(payload: any) {
   });
 }
 
-export function saveReport(payload: {
-  account_id: number;
-  from: string;
-  to: string;
-  from_time: string;
-  to_time: string;
-}) {
+export function saveReport(payload: TimePickerType) {
   return axios.post('/save-report/', payload);
 }
 
@@ -102,15 +96,7 @@ export function getList(id: number, page: number, sort: string) {
   });
 }
 
-type DownloadChestPayload = {
-  account_id: number;
-  from: string;
-  to: string;
-  from_time: string;
-  to_time: string;
-};
-
-export function getListFile(payload: DownloadChestPayload) {
+export function getListFile(payload: TimePickerType) {
   return axios.post(
     '/list/',
     {

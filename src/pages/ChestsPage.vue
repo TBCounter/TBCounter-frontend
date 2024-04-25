@@ -143,7 +143,7 @@ import {
   deleteChestRequest,
   getListFile,
 } from '../api';
-import { Chest } from 'src/types';
+import { Chest, TimePickerType } from 'src/types';
 import { onBeforeUnmount } from 'vue';
 import TimePicker from 'src/components/TimePicker.vue';
 
@@ -251,7 +251,8 @@ async function updateChestsOpenWS() {
   };
 }
 const disableDownloadButton = ref(false);
-async function downloadChests(payload: any) {
+
+async function downloadChests(payload: TimePickerType) {
   disableDownloadButton.value = true;
   // console.log(payload);
   const response = await getListFile(payload);
