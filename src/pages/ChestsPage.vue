@@ -17,7 +17,13 @@
         @request="onRequest"
       >
         <template v-slot:top-right>
-          <DownloadChests :id="+route.params.id"></DownloadChests>
+          <TimePicker
+            :id="+route.params.id"
+            :disable-button="disableDownloadButton"
+            @selected="downloadChests"
+            icon="download"
+            tooltip="Download chests"
+          />
         </template>
 
         <template v-slot:body="props">
@@ -135,10 +141,11 @@ import {
   getList,
   saveChestRequest,
   deleteChestRequest,
+  getListFile,
 } from '../api';
 import { Chest } from 'src/types';
 import { onBeforeUnmount } from 'vue';
-import DownloadChests from 'src/components/DownloadChests.vue';
+import TimePicker from 'src/components/TimePicker.vue';
 
 const route = useRoute();
 const wsConnection = ref<WebSocket>();
@@ -242,6 +249,23 @@ async function updateChestsOpenWS() {
     console.log(event);
     // console.log("Successfully connected to the echo websocket server...")
   };
+}
+const disableDownloadButton = ref(false);
+async function downloadChests(payload: any) {
+  disableDownloadButton.value = true;
+  // console.log(payload);
+  const response = await getListFile(payload);
+  const file = window.URL.createObjectURL(new Blob([response.data]));
+  const link = document.createElement('a');
+  link.href = file;
+
+  link.setAttribute(
+    'download',
+    `report_${payload.account_id}_${payload.from}_${payload.to}.xlsx`
+  );
+  document.body.appendChild(link);
+  link.click();
+  disableDownloadButton.value = false;
 }
 
 onBeforeUnmount(() => {

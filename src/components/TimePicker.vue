@@ -1,6 +1,6 @@
 <template>
-  <q-btn icon="download" @click="dateSelection = true"
-    ><q-tooltip> Download chests </q-tooltip></q-btn
+  <q-btn :icon="icon" @click="dateSelection = true"
+    ><q-tooltip> {{ tooltip }} </q-tooltip></q-btn
   >
   <q-dialog v-model="dateSelection">
     <q-date v-model="list" range mask="YYYY-MM-DD">
@@ -60,14 +60,17 @@
 </template>
 
 <script setup lang="ts">
-import { getListFile } from 'src/api';
 import { ref } from 'vue';
 
 type Props = {
   id: number;
+  tooltip?: string;
+  disableButton: boolean;
+  icon: string;
 };
 
 const props = defineProps<Props>();
+const emit = defineEmits(['selected']);
 
 const dateSelection = ref(false);
 
@@ -77,12 +80,9 @@ const timeSelectionSecond = ref(false);
 const downloadTimeFirst = ref('00:00');
 const downloadTimeSecond = ref('23:59');
 
-const disableButton = ref(false);
-
 const list = ref({ from: '', to: '' });
 
 async function getListFileButton() {
-  disableButton.value = true;
   const payload = {
     account_id: props.id,
     from: list.value.from,
@@ -90,18 +90,8 @@ async function getListFileButton() {
     from_time: downloadTimeFirst.value,
     to_time: downloadTimeSecond.value,
   };
-  const response = await getListFile(payload);
-  const file = window.URL.createObjectURL(new Blob([response.data]));
-  const link = document.createElement('a');
-  link.href = file;
 
-  link.setAttribute(
-    'download',
-    `report_${payload.account_id}_${payload.from}_${payload.to}.xlsx`
-  );
-  document.body.appendChild(link);
-  link.click();
-  disableButton.value = false;
+  emit('selected', payload);
 }
 </script>
 

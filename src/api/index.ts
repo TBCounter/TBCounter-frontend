@@ -64,9 +64,7 @@ export function saveReport(payload: {
   from_time: string;
   to_time: string;
 }) {
-  return axios.post('/save-report/', {
-    ...payload,
-  });
+  return axios.post('/save-report/', payload);
 }
 
 export function setNewAccount(payload: {
