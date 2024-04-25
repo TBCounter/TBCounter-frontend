@@ -54,6 +54,7 @@ import { computed } from 'vue';
 import { ref } from 'vue';
 import { onMounted } from 'vue';
 import { useRoute } from 'vue-router';
+import TimePicker from '../components/TimePicker.vue';
 
 const route = useRoute();
 
@@ -131,6 +132,11 @@ function getDays(to: Date, toTime: string, from: Date, fromTime: string) {
 const disableDownloadButton = ref(false);
 
 async function createNewReport(payload: TimePickerType) {
-  await saveReport(payload)
+  disableDownloadButton.value = true;
+  await saveReport(payload);
+  await getReportList(parseInt(route.params.id as string)).then((response) => {
+    reportsList.value = response.data;
+  });
+  disableDownloadButton.value = false;
 }
 </script>
