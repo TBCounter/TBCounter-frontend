@@ -1,0 +1,13 @@
+version: "3.5"
+
+services:
+  client:
+    build: .
+    ports:
+      - 8080:80
+    # volumes:
+    #   # - ./certs/cert.pem:/certs/cert.cert
+    #   # - ./certs/key.pem:/certs/key.key
+    #   - ./certs/:/etc/letsencrypt/live/tbcounter.fun/:ro
+    # volumes:
+    #   - ./certs:/certs
