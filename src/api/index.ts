@@ -57,7 +57,13 @@ export function getReport(payload: any) {
   });
 }
 
-export function saveReport(payload: any) {
+export function saveReport(payload: {
+  account_id: number;
+  from: string;
+  to: string;
+  from_time: string;
+  to_time: string;
+}) {
   return axios.post('/save-report/', {
     ...payload,
   });
